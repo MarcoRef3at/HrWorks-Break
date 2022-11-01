@@ -157,7 +157,11 @@ var stopJob = new CronJob(
           const { page, browser } = await hrWorksLogin();
           if (isWorkingDay) {
             await runner(page, browser, "stop");
-            await sendEmail({ email: process.env.EMAIL, subject: "Clocked out", message: `` });
+            await sendEmail({
+              email: process.env.EMAIL,
+              subject: "Clocked out",
+              message: ``
+            });
           }
         }, rand * 60 * 1000);
       }
