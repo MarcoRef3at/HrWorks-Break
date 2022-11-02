@@ -1,7 +1,7 @@
 const dotenv = require("dotenv");
 // Load env vars
 dotenv.config({ path: "./.env" });
-const playwright = require("playwright");
+const playwright = require('playwright-chromium');
 const sendEmail = require("./sendEmail");
 var CronJob = require("cron").CronJob;
 const url = "https://login.hrworks.de/";
@@ -51,7 +51,7 @@ let runner = async (page, browser, action = "start") => {
 async function hrWorksLogin() {
   const browser = await playwright.chromium.launch({
     args: ["--start-maximized"],
-    headless: true
+    headless: false
   });
   const page = await browser.newPage();
   await page.goto(url);
