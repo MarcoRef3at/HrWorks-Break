@@ -51,7 +51,7 @@ let runner = async (page, browser, action = "start") => {
 async function hrWorksLogin() {
   const browser = await playwright.chromium.launch({
     args: ["--start-maximized"],
-    headless: false
+    headless: true
   });
   const page = await browser.newPage();
   await page.goto(url);
