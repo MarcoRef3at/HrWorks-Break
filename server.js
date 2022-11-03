@@ -88,7 +88,6 @@ const breakRunner = async () => {
   if (isWorkingDay) {
     await runner(page, browser, "stop");
     await sendEmail({
-      email: process.env.EMAIL,
       subject: "Break Started",
       message: ``
     });
@@ -96,7 +95,6 @@ const breakRunner = async () => {
       const { page, browser } = await hrWorksLogin();
       await runner(page, browser, "start");
       await sendEmail({
-        email: process.env.EMAIL,
         subject: "Break Ended",
         message: ``
       });
@@ -104,6 +102,7 @@ const breakRunner = async () => {
   }
 };
 
+hrWorksLogin()
 var clockedInCheck = new CronJob(
   "0 0 9 * * *",
   async function () {
@@ -113,7 +112,6 @@ var clockedInCheck = new CronJob(
         await browser.close();
         if (!isWorkingDay) {
           await sendEmail({
-            email: process.env.EMAIL,
             subject: "Clock in reminder",
             message: `don't forget to clock-in \n ${url} `
           });
@@ -158,7 +156,6 @@ var stopJob = new CronJob(
           if (isWorkingDay) {
             await runner(page, browser, "stop");
             await sendEmail({
-              email: process.env.EMAIL,
               subject: "Clocked out",
               message: ``
             });

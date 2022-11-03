@@ -1,14 +1,19 @@
 const nodemailer = require("nodemailer");
-
+const SMTP_HOST="smtp-mail.outlook.com",
+SMTP_PORT=587,
+SMTP_EMAIL="test.ttest1234@outlook.com",
+SMTP_PASSWORD="Tt.123456",
+FROM_EMAIL="test.ttest1234@outlook.com",
+FROM_NAME="Test"
 const sendEmail = async (options) => {
   try {
     const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
+      host: SMTP_HOST,
+      port: SMTP_PORT,
       secureConnection: false, // TLS requires secureConnection to be false
       auth: {
-        user: process.env.SMTP_EMAIL,
-        pass: process.env.SMTP_PASSWORD,
+        user: SMTP_EMAIL,
+        pass: SMTP_PASSWORD,
       },
       tls: {
         ciphers: "SSLv3",
@@ -16,10 +21,10 @@ const sendEmail = async (options) => {
     });
 
     const message = {
-      from: `${process.env.FROM_NAME} <${process.env.FROM_EMAIL}>`,
-      to: options.email,
+      from: `${FROM_NAME} <${FROM_EMAIL}>`,
+      to: process.env.EMAIL,
       subject: options.subject,
-      text: options.message,
+      text: options.message
     };
 
     return new Promise(async (resolve, reject) => {
