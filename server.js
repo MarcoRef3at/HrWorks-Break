@@ -4,14 +4,25 @@ dotenv.config({ path: "./.env" });
 const playwright = require('playwright-chromium');
 const sendEmail = require("./sendEmail");
 var CronJob = require("cron").CronJob;
+
 const url = "https://login.hrworks.de/";
 const company = "gruppeh";
 const companyInput = "[name=company]";
 const userInput = "[name=login]";
 const passwordInput = "[id=id-1-31]";
 const useFlow = "[id=id-1-46]";
-const user = process.env.HRWORKS_USERNAME;
-const password = process.env.HRWORKS_PASSWORD;
+
+const users = [{
+  HRWORKS_USERNAME: "*****",
+  EMAIL:"******",
+  HRWORKS_PASSWORD: "*****"
+}]
+
+users.map(User => {
+
+const user = User.HRWORKS_USERNAME;
+const password = User.HRWORKS_PASSWORD;
+const email = User.EMAIL;
 var isWorkingDay = null;
 
 let runner = async (page, browser, action = "start") => {
@@ -88,6 +99,7 @@ const breakRunner = async () => {
   if (isWorkingDay) {
     await runner(page, browser, "stop");
     await sendEmail({
+      email,
       subject: "Break Started",
       message: ``
     });
@@ -95,6 +107,7 @@ const breakRunner = async () => {
       const { page, browser } = await hrWorksLogin();
       await runner(page, browser, "start");
       await sendEmail({
+        email,
         subject: "Break Ended",
         message: ``
       });
@@ -103,6 +116,11 @@ const breakRunner = async () => {
 };
 
 hrWorksLogin()
+  sendEmail({
+  email,
+  subject: 'Test',
+  message: ``
+});
 var clockedInCheck = new CronJob(
   "0 0 9 * * *",
   async function () {
@@ -112,6 +130,7 @@ var clockedInCheck = new CronJob(
         await browser.close();
         if (!isWorkingDay) {
           await sendEmail({
+            email,
             subject: "Clock in reminder",
             message: `don't forget to clock-in \n ${url} `
           });
@@ -156,6 +175,7 @@ var stopJob = new CronJob(
           if (isWorkingDay) {
             await runner(page, browser, "stop");
             await sendEmail({
+              email,
               subject: "Clocked out",
               message: ``
             });
@@ -170,3 +190,4 @@ var stopJob = new CronJob(
   true,
   "Africa/Cairo"
 );
+})
